@@ -33,7 +33,13 @@ async def connect(reader, writer, cb):
 
     request = await reader.readline()
 
-    method, uri, proto = request.split(b" ")
+    try:
+        method, uri, proto = request.split(b" ")
+    except Exception as e:
+        print("Malformed request: {}".format(request))
+        print(e)
+        return
+
     m = re.match(REQ_RE, uri)
     path = m.group(5) if m else "/"
 
